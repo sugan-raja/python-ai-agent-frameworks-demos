@@ -161,7 +161,6 @@ RESPONSE:
         await chat.add_chat_message(message=user_input)
         try:
             async for response in chat.invoke():
-                print(response)
                 if response is None or not response.name:
                     continue
                 print()
