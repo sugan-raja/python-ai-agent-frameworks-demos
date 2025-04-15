@@ -4,6 +4,7 @@ import os
 import azure.identity
 import openai
 from agents import Agent, OpenAIChatCompletionsModel, Runner, function_tool, set_tracing_disabled
+from agents.extensions.visualization import draw_graph
 from dotenv import load_dotenv
 
 # Disable tracing since we're not using OpenAI.com models
@@ -15,11 +16,9 @@ API_HOST = os.getenv("API_HOST", "github")
 
 if API_HOST == "github":
     client = openai.AsyncOpenAI(base_url="https://models.inference.ai.azure.com", api_key=os.environ["GITHUB_TOKEN"])
-    MODEL_NAME = "gpt-4o"
+    MODEL_NAME = os.getenv("GITHUB_MODEL", "gpt-4o")
 elif API_HOST == "azure":
-    token_provider = azure.identity.get_bearer_token_provider(
-        azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
-    )
+    token_provider = azure.identity.get_bearer_token_provider(azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
     client = openai.AsyncAzureOpenAI(
         api_version=os.environ["AZURE_OPENAI_VERSION"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
@@ -42,7 +41,6 @@ agent = Agent(
     instructions="You can only provide weather information.",
     tools=[get_weather],
 )
-
 
 spanish_agent = Agent(
     name="Spanish agent",
@@ -68,6 +66,10 @@ triage_agent = Agent(
 
 async def main():
     result = await Runner.run(triage_agent, input="Hola, ¿cómo estás? ¿Puedes darme el clima para San Francisco CA?")
+    gz_source = draw_graph(triage_agent, filename="openai_agents_handoffs.png")
+    # save graph to file in graphviz format
+    gz_source.save("openai_agents_handoffs.dot")
+
     print(result.final_output)
 
 

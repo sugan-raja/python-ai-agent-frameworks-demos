@@ -15,13 +15,9 @@ API_HOST = os.getenv("API_HOST", "github")
 
 
 if API_HOST == "github":
-    client = OpenAIChatCompletionClient(
-        model="gpt-4o", api_key=os.environ["GITHUB_TOKEN"], base_url="https://models.inference.ai.azure.com"
-    )
+    client = OpenAIChatCompletionClient(model=os.getenv("GITHUB_MODEL", "gpt-4o"), api_key=os.environ["GITHUB_TOKEN"], base_url="https://models.inference.ai.azure.com")
 elif API_HOST == "azure":
-    token_provider = azure.identity.get_bearer_token_provider(
-        azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
-    )
+    token_provider = azure.identity.get_bearer_token_provider(azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
     client = AzureOpenAIChatCompletionClient(
         model=os.environ["AZURE_OPENAI_CHAT_MODEL"],
         api_version=os.environ["AZURE_OPENAI_VERSION"],
@@ -29,13 +25,6 @@ elif API_HOST == "azure":
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         azure_ad_token_provider=token_provider,
     )
-
-planner_agent = AssistantAgent(
-    "planner_agent",
-    model_client=client,
-    description="A helpful assistant that can plan trips.",
-    system_message="You are a helpful assistant that can suggest a travel plan for a user based on their request.",
-)
 
 local_agent = AssistantAgent(
     "local_agent",
@@ -62,7 +51,7 @@ travel_summary_agent = AssistantAgent(
 async def run_agents():
     termination = TextMentionTermination("TERMINATE")
     group_chat = MagenticOneGroupChat(
-        [planner_agent, local_agent, language_agent, travel_summary_agent],
+        [local_agent, language_agent, travel_summary_agent],
         termination_condition=termination,
         model_client=client,
     )
