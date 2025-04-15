@@ -89,10 +89,13 @@ You can run the examples in this repository by executing the scripts in the `exa
 
 | Example | Description |
 | ------- | ----------- |
+| autogen_basic.py | Uses AutoGen to build a single agent. |
+| autogen_tools.py | Uses AutoGen to build a single agent with tools. |
 | autogen_magenticone.py | Uses AutoGen with the MagenticOne orchestrator agent for travel planning. |
 | autogen_swarm.py | Uses AutoGen with the Swarm orchestrator agent for flight refunding requests. |
 | langgraph.py | Uses LangGraph to build an agent with a StateGraph to play songs. |
 | llamaindex.py | Uses LlamaIndex to build a ReAct agent for RAG on multiple indexes. |
+| openai_agents_basic.py | Uses the OpenAI Agents framework to build a single agent. |
 | openai_agents.py | Uses the OpenAI Agents framework to handoff between several agents with tools. |
 | openai_functioncalling.py | Uses OpenAI Function Calling to call functions based on LLM output. |
 | pydanticai.py | Uses PydanticAI to build a two-agent sequential workflow for flight planning. |
@@ -118,6 +121,8 @@ If you want to run the scripts locally, you need to set up the `GITHUB_TOKEN` en
     ```shell
     export GITHUB_TOKEN=your_personal_access_token
     ```
+
+10. Optionally, you can use a model other than "gpt-4o" by setting the `GITHUB_MODEL` environment variable. Use a model that supports function calling, such as: `gpt-4o`, `gpt-4o-mini`, `o3-mini`, `AI21-Jamba-1.5-Large`, `AI21-Jamba-1.5-Mini`, `Codestral-2501`, `Cohere-command-r`, `Ministral-3B`, `Mistral-Large-2411`, `Mistral-Nemo`, `Mistral-small`
 
 ## Provisioning Azure AI resources
 
