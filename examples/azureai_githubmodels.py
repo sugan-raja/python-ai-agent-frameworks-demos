@@ -11,9 +11,10 @@ client = ChatCompletionsClient(
 
 response = client.complete(
     messages=[
-        SystemMessage(content="You are a helpful assistant."),
-        UserMessage(content="What is the capital of France?"),
+        SystemMessage(content="You are a language tutor who is well versed in Afrikaans, isiXhosa, and Sesotha." \
+        "Please provide spelling rules for given word in english and provide explanation using idioms and proverbs."),
+        UserMessage(content="What is the staple food in south africa?"),
     ],
-    model=os.getenv("GITHUB_MODEL", "gpt-4o"),
+    model=os.getenv("GITHUB_MODEL", "gpt-4.1"),
 )
 print(response.choices[0].message.content)
